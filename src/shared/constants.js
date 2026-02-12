@@ -43,6 +43,31 @@
     GLOW_CONTAINER_ID: 'plex-ambilight-container',
     GLOW_SIDES: ['top', 'right', 'bottom', 'left'],
 
+    // Player controls injection
+    PLEX_CONTROLS_SELECTORS: [
+      '[class*="PlayerControls"]',
+      '[class*="playerControls"]',
+      '[class*="controlsContainer"]',
+      '[class*="ControlsContainer"]',
+    ],
+    PLEX_CONTROLS_RIGHT_SELECTORS: [
+      '[class*="rightControls"]',
+      '[class*="RightControls"]',
+      '[class*="controlsRight"]',
+      '[class*="ControlsRight"]',
+    ],
+    // The vertical ellipsis / "more" button — insert our icon next to it
+    PLEX_MORE_BUTTON_SELECTORS: [
+      'button[class*="MoreButton"]',
+      'button[class*="moreButton"]',
+      '[data-testid="moreButton"]',
+      '[data-testid="MoreButton"]',
+      '[aria-label="More"]',
+      '[aria-label="more"]',
+    ],
+    PLAYER_CONTROLS_ID: 'plex-ambilight-player-controls',
+    PLAYER_CONTROLS_REINJECT_DELAY: 300,
+
     // Performance
     MIN_VIDEO_READY_STATE: 2,
     DETECTION_POLL_INTERVAL: 2000,
