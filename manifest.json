@@ -36,6 +36,7 @@
         "src/shared/messaging.js",
         "src/content/plex-detector.js",
         "src/content/renderer.js",
+        "src/content/player-controls.js",
         "src/content/content.js"
       ],
       "css": [

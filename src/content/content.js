@@ -17,6 +17,7 @@
   // --- State ---
   let detector = null;
   let renderer = null;
+  let playerControls = null;
   let enabled = C.DEFAULTS.enabled;
   let currentSettings = Object.assign({}, C.DEFAULTS);
 
@@ -33,6 +34,13 @@
       renderer.stop();
       renderer = null;
     }
+
+    // Inject player controls into Plex control bar
+    if (!playerControls) {
+      playerControls = PA.createPlayerControls();
+    }
+    playerControls.updateState(enabled, currentSettings);
+    playerControls.inject(container);
 
     if (!enabled) {
       log('Ambilight disabled, skipping renderer start');
@@ -52,6 +60,9 @@
     if (renderer) {
       renderer.stop();
       renderer = null;
+    }
+    if (playerControls) {
+      playerControls.remove();
     }
   }
 
@@ -102,6 +113,10 @@
           onVideoFound(video, container);
         }
       }
+
+      if (playerControls) {
+        playerControls.updateState(enabled, null);
+      }
     }
   });
 
@@ -123,6 +138,10 @@
           onVideoFound(video, container);
         }
       }
+
+      if (playerControls) {
+        playerControls.updateState(enabled, null);
+      }
     }
 
     if (changes[C.STORAGE_KEY_SETTINGS]) {
@@ -130,6 +149,9 @@
       Object.assign(currentSettings, newSettings);
       if (renderer && enabled) {
         renderer.updateSettings(currentSettings);
+      }
+      if (playerControls) {
+        playerControls.updateState(undefined, newSettings);
       }
     }
   });
