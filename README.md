@@ -57,10 +57,19 @@ The glow fills the entire viewport area surrounding the video, automatically ada
 
 ## Settings
 
-Click the extension icon in the toolbar to access settings. All settings apply in real-time.
+All settings apply in real-time. There are two ways to access them:
 
-### Extension UI
+### In-Player Controls
+A lightbulb icon is injected directly into the Plex player control bar (next to the ellipsis menu). Click it to open a settings panel without leaving the player.
+
+![In-Player Controls](screenshots/in-player-controls.png)
+
+### Toolbar Popup
+Click the extension icon in the toolbar to open the popup settings panel.
+
 ![Popup Settings](screenshots/popup.png)
+
+Both interfaces stay in sync — changes made in either are reflected in the other.
 
 ### Intensity (10% - 100%, default: 70%)
 
@@ -104,6 +113,7 @@ plex-ambilight/
 ├── src/
 │   ├── content/
 │   │   ├── content.js          # Orchestrator: wires detector + renderer
+│   │   ├── player-controls.js  # In-player settings panel (Shadow DOM)
 │   │   ├── renderer.js         # Canvas-based ambilight engine
 │   │   ├── plex-detector.js    # Video element + player container detection
 │   │   └── styles.css          # Glow container styles
@@ -130,6 +140,7 @@ plex-ambilight/
 - The glow container uses `position: fixed` on `document.body` to avoid interfering with Plex's layout
 - A `clip-path: polygon(evenodd, ...)` creates a frame-shaped mask that excludes the video content area
 - Rendering pauses automatically when the tab is hidden (`document.visibilityState`)
+- The in-player controls use a closed Shadow DOM to avoid style conflicts with Plex's UI, and a `MutationObserver` to re-inject the button when Plex re-renders its controls (SPA navigation, fullscreen toggle, etc.)
 
 ## Acknowledgements
 
