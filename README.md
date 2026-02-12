@@ -90,8 +90,9 @@ Controls the CSS blur filter radius applied to each glow canvas. Determines how 
 
 ## Compatibility
 
-- **Chrome** (Manifest V3) - primary target
-- **Plex Web** at `app.plex.tv` - auto-detected
+- **Chrome** (Manifest V3)
+- **Firefox** (Manifest V3)
+- **Plex Web** at `app.plex.tv` only — self-hosted server URLs (e.g. `192.168.x.x:32400`) are not currently supported due to Chrome extension permission constraints
 - Self-hosted Plex server content only (local media, no DRM restrictions)
 - Handles SPA navigation, fullscreen, aspect ratio changes, and player state transitions
 
