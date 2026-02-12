@@ -394,64 +394,49 @@
     // --- Control bar detection & injection ---
 
     /**
-     * Find the insertion point for our icon next to the ⋮ ellipsis.
-     * Uses a bottom-up approach: find Plex icon buttons (they contain
-     * SVGs), then identify their shared parent container.
-     * Returns { parent, refChild } where we should insertBefore(host, refChild).
+     * Find the insertion point for our icon right after the ⋮ ellipsis.
+     *
+     * Plex DOM structure (buttonGroupRight):
+     *   <span>                    ← wraps ⋮
+     *     <button moreButton>
+     *   </span>
+     *   <button repeatButton>    ← we insert BEFORE this
+     *   <button shuffleButton>
+     *   ...
+     *
+     * We find the More button, walk up to its wrapper (span), then
+     * insert into the wrapper's parent right after the wrapper.
+     *
      * @param {HTMLElement} container
      * @returns {{ parent: HTMLElement, refChild: HTMLElement|null }|null}
      */
     function findInsertionPoint(container) {
-      // Strategy 1: find the More (⋮) button, then locate the nearest
-      // sibling icon button row and insert at its start.
       for (const sel of C.PLEX_MORE_BUTTON_SELECTORS) {
         const moreBtn = container.querySelector(sel) || document.querySelector(sel);
         if (!moreBtn) continue;
 
-        // The ⋮ and icon buttons might be direct siblings
-        var next = moreBtn.nextElementSibling;
-        while (next) {
-          // If the next sibling is a button or contains buttons, insert before it
-          if (next.tagName === 'BUTTON' || next.querySelectorAll('button').length > 0) {
-            return { parent: moreBtn.parentElement, refChild: next };
-          }
-          next = next.nextElementSibling;
+        // The ⋮ is inside a <span> wrapper. We need the buttonGroupRight
+        // as parent, not the <span>. Walk up until we reach the group.
+        var wrapper = moreBtn.parentElement;
+        var group = wrapper.parentElement;
+
+        // If the direct parent IS the group (no span wrapper), use it directly
+        if (!group) {
+          return { parent: wrapper, refChild: moreBtn.nextElementSibling };
         }
 
-        // If ⋮ has no button siblings, insert right after it
-        return { parent: moreBtn.parentElement, refChild: moreBtn.nextElementSibling };
+        // Insert after the wrapper (between ⋮'s span and the next button)
+        return { parent: group, refChild: wrapper.nextElementSibling };
       }
 
-      // Strategy 2: bottom-up — find all buttons with SVGs in the
-      // controls area. Group by parent to find the icon row.
-      var scope = null;
+      // Fallback: find the right controls group and insert as first child
+      for (const sel of C.PLEX_CONTROLS_RIGHT_SELECTORS) {
+        const el = container.querySelector(sel) || document.querySelector(sel);
+        if (el) return { parent: el, refChild: el.firstChild };
+      }
       for (const sel of C.PLEX_CONTROLS_SELECTORS) {
-        scope = container.querySelector(sel) || document.querySelector(sel);
-        if (scope) break;
-      }
-      if (!scope) return null;
-
-      var svgButtons = scope.querySelectorAll('button:has(svg)');
-      if (svgButtons.length < 2) return null;
-
-      // Find the most common parent among SVG buttons (the icon row)
-      var parentCounts = new Map();
-      for (var i = 0; i < svgButtons.length; i++) {
-        var p = svgButtons[i].parentElement;
-        parentCounts.set(p, (parentCounts.get(p) || 0) + 1);
-      }
-
-      var bestParent = null;
-      var bestCount = 0;
-      parentCounts.forEach(function (count, p) {
-        if (count > bestCount) {
-          bestCount = count;
-          bestParent = p;
-        }
-      });
-
-      if (bestParent) {
-        return { parent: bestParent, refChild: bestParent.firstChild };
+        const el = container.querySelector(sel) || document.querySelector(sel);
+        if (el) return { parent: el, refChild: el.firstChild };
       }
 
       return null;
