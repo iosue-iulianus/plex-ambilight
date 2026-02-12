@@ -59,7 +59,7 @@
       display: none;
       position: absolute;
       bottom: calc(100% + 8px);
-      right: -8px;
+      left: -8px;
       width: 220px;
       background: rgba(30, 30, 34, 0.95);
       backdrop-filter: blur(12px);
@@ -394,17 +394,28 @@
     // --- Control bar detection & injection ---
 
     /**
+     * Find the "More" (vertical ellipsis) button in the Plex controls.
+     * @param {HTMLElement} container
+     * @returns {HTMLElement|null}
+     */
+    function findMoreButton(container) {
+      for (const sel of C.PLEX_MORE_BUTTON_SELECTORS) {
+        const el = container.querySelector(sel) || document.querySelector(sel);
+        if (el) return el;
+      }
+      return null;
+    }
+
+    /**
      * Find the Plex player controls bar within the given container.
      * @param {HTMLElement} container
      * @returns {HTMLElement|null}
      */
     function findControlsBar(container) {
-      // Try right-side controls first (ideal placement next to fullscreen)
       for (const sel of C.PLEX_CONTROLS_RIGHT_SELECTORS) {
         const el = container.querySelector(sel) || document.querySelector(sel);
         if (el) return el;
       }
-      // Fall back to the main controls bar
       for (const sel of C.PLEX_CONTROLS_SELECTORS) {
         const el = container.querySelector(sel) || document.querySelector(sel);
         if (el) return el;
@@ -438,21 +449,26 @@
 
     /**
      * Attempt to place the button into the controls bar.
+     * Strategy: insert right after the "More" (⋮) button so we sit
+     * next to the ellipsis, away from the tiny volume slider.
+     * Falls back to prepending to the right controls bar.
      */
     function tryInject() {
       if (injected && document.contains(host)) return;
 
+      // Best case: find the ⋮ button and insert right before it
+      const moreBtn = findMoreButton(currentContainer);
+      if (moreBtn) {
+        moreBtn.before(host);
+        injected = true;
+        log('Controls injected before More button');
+        return;
+      }
+
+      // Fallback: find the controls bar and insert at the start
       const bar = findControlsBar(currentContainer);
       if (bar) {
-        // Insert as first child of right controls, or last child of main controls
-        const isRightBar = C.PLEX_CONTROLS_RIGHT_SELECTORS.some(
-          function (sel) { return bar.matches(sel); }
-        );
-        if (isRightBar) {
-          bar.insertBefore(host, bar.firstChild);
-        } else {
-          bar.appendChild(host);
-        }
+        bar.insertBefore(host, bar.firstChild);
         injected = true;
         log('Controls injected into', bar.className);
       } else {
