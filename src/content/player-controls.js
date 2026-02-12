@@ -18,11 +18,30 @@
   }
 
   // SVG lightbulb icon (24x24, matches Plex icon sizing)
-  const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-    '<path d="M9 18h6"/>' +
-    '<path d="M10 22h4"/>' +
-    '<path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5C8.35 12.26 8.82 13.02 9 14"/>' +
-    '</svg>';
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  function createIconSVG() {
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('width', '24');
+    svg.setAttribute('height', '24');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+
+    var paths = [
+      'M9 18h6',
+      'M10 22h4',
+      'M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5C8.35 12.26 8.82 13.02 9 14',
+    ];
+    for (var i = 0; i < paths.length; i++) {
+      var p = document.createElementNS(SVG_NS, 'path');
+      p.setAttribute('d', paths[i]);
+      svg.appendChild(p);
+    }
+    return svg;
+  }
 
   // --- Shadow DOM styles for the panel ---
   const PANEL_STYLES = `
@@ -228,7 +247,7 @@
       btnEl = document.createElement('button');
       btnEl.className = 'pa-btn' + (enabled ? ' active' : '');
       btnEl.title = 'Ambilight Settings';
-      btnEl.innerHTML = ICON_SVG;
+      btnEl.appendChild(createIconSVG());
       btnEl.addEventListener('click', onButtonClick);
       shadow.appendChild(btnEl);
 
@@ -251,7 +270,9 @@
       toggleEl.className = 'pa-toggle';
       toggleEl.setAttribute('role', 'switch');
       toggleEl.setAttribute('aria-checked', String(enabled));
-      toggleEl.innerHTML = '<span class="pa-toggle-knob"></span>';
+      var knob = document.createElement('span');
+      knob.className = 'pa-toggle-knob';
+      toggleEl.appendChild(knob);
       toggleEl.addEventListener('click', onToggleClick);
       header.appendChild(toggleEl);
 
