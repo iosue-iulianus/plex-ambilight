@@ -394,52 +394,64 @@
     // --- Control bar detection & injection ---
 
     /**
-     * Find the horizontal row of icon buttons in the Plex controls.
-     * Looks for the More (⋮) button first, then walks to the sibling
-     * container that holds the icon buttons (PiP, shuffle, etc.).
-     * Falls back to heuristic: a child of the right controls that
-     * contains multiple <button> elements in a horizontal layout.
+     * Find the insertion point for our icon next to the ⋮ ellipsis.
+     * Uses a bottom-up approach: find Plex icon buttons (they contain
+     * SVGs), then identify their shared parent container.
+     * Returns { parent, refChild } where we should insertBefore(host, refChild).
      * @param {HTMLElement} container
-     * @returns {HTMLElement|null}
+     * @returns {{ parent: HTMLElement, refChild: HTMLElement|null }|null}
      */
-    function findIconRow(container) {
-      // Strategy 1: find the More button, then its sibling that is
-      // the horizontal icon row (contains multiple buttons).
+    function findInsertionPoint(container) {
+      // Strategy 1: find the More (⋮) button, then locate the nearest
+      // sibling icon button row and insert at its start.
       for (const sel of C.PLEX_MORE_BUTTON_SELECTORS) {
         const moreBtn = container.querySelector(sel) || document.querySelector(sel);
-        if (moreBtn && moreBtn.parentElement) {
-          const siblings = moreBtn.parentElement.children;
-          for (let i = 0; i < siblings.length; i++) {
-            const sib = siblings[i];
-            if (sib !== moreBtn && sib.querySelectorAll('button').length >= 2) {
-              return sib;
-            }
+        if (!moreBtn) continue;
+
+        // The ⋮ and icon buttons might be direct siblings
+        var next = moreBtn.nextElementSibling;
+        while (next) {
+          // If the next sibling is a button or contains buttons, insert before it
+          if (next.tagName === 'BUTTON' || next.querySelectorAll('button').length > 0) {
+            return { parent: moreBtn.parentElement, refChild: next };
           }
+          next = next.nextElementSibling;
         }
+
+        // If ⋮ has no button siblings, insert right after it
+        return { parent: moreBtn.parentElement, refChild: moreBtn.nextElementSibling };
       }
 
-      // Strategy 2: find right controls, then the child with multiple buttons
-      for (const sel of C.PLEX_CONTROLS_RIGHT_SELECTORS) {
-        const rightBar = container.querySelector(sel) || document.querySelector(sel);
-        if (rightBar) {
-          // Look for the deepest container that holds multiple buttons
-          var children = rightBar.children;
-          for (var i = 0; i < children.length; i++) {
-            if (children[i].querySelectorAll('button').length >= 2) {
-              return children[i];
-            }
-          }
-          // If the right bar itself has buttons directly, use it
-          if (rightBar.querySelectorAll(':scope > button').length >= 2) {
-            return rightBar;
-          }
-        }
-      }
-
-      // Strategy 3: fall back to any controls container
+      // Strategy 2: bottom-up — find all buttons with SVGs in the
+      // controls area. Group by parent to find the icon row.
+      var scope = null;
       for (const sel of C.PLEX_CONTROLS_SELECTORS) {
-        const el = container.querySelector(sel) || document.querySelector(sel);
-        if (el) return el;
+        scope = container.querySelector(sel) || document.querySelector(sel);
+        if (scope) break;
+      }
+      if (!scope) return null;
+
+      var svgButtons = scope.querySelectorAll('button:has(svg)');
+      if (svgButtons.length < 2) return null;
+
+      // Find the most common parent among SVG buttons (the icon row)
+      var parentCounts = new Map();
+      for (var i = 0; i < svgButtons.length; i++) {
+        var p = svgButtons[i].parentElement;
+        parentCounts.set(p, (parentCounts.get(p) || 0) + 1);
+      }
+
+      var bestParent = null;
+      var bestCount = 0;
+      parentCounts.forEach(function (count, p) {
+        if (count > bestCount) {
+          bestCount = count;
+          bestParent = p;
+        }
+      });
+
+      if (bestParent) {
+        return { parent: bestParent, refChild: bestParent.firstChild };
       }
 
       return null;
@@ -470,18 +482,16 @@
     }
 
     /**
-     * Attempt to place the button into the icon row.
-     * Inserts as the first child so it appears at the leftmost position
-     * in the horizontal button row, to the left of PiP/shuffle/etc.
+     * Attempt to place the button next to the ⋮ ellipsis in the icon row.
      */
     function tryInject() {
       if (injected && document.contains(host)) return;
 
-      const row = findIconRow(currentContainer);
-      if (row) {
-        row.insertBefore(host, row.firstChild);
+      var point = findInsertionPoint(currentContainer);
+      if (point) {
+        point.parent.insertBefore(host, point.refChild);
         injected = true;
-        log('Controls injected into icon row', row.className);
+        log('Controls injected into', point.parent.className);
       } else {
         // Controls not rendered yet — retry shortly
         injected = false;
