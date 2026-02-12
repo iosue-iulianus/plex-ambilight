@@ -1,8 +1,18 @@
-# Plex Ambilight
+<div align="center">
 
-A browser extension that adds ambient lighting effects around the video player in Plex Web. Colors are sampled from the edges of the currently playing video and projected as a soft glow into the surrounding dark areas of the page, similar to Philips Ambilight TVs.
+# 🎬 Plex Ambilight
 
-Built for self-hosted Plex servers with local media libraries.
+[▶️ Watch Demo Video](screenshots/4x3_video.mp4)
+
+**Ambient lighting effects for Plex Web**
+
+Colors are sampled from the edges of the currently playing video and projected as a soft glow into the surrounding dark areas of the page, similar to Philips Ambilight TVs.
+
+*Built for self-hosted Plex servers with local media libraries.*
+
+</div>
+
+---
 
 ## How it works
 
@@ -65,6 +75,19 @@ Controls the CSS blur filter radius applied to each glow canvas. Determines how 
 - **Low (20-40px):** Sharper color bands are visible in the glow, more closely mirroring what's on screen. Can look more "digital."
 - **Medium (60-100px):** Smooth, natural-looking gradient. Individual color regions blend together.
 - **High (120-160px):** Very diffused, almost uniform glow. Colors from different parts of the edge blend into each other. Higher GPU cost.
+
+## Screenshots
+
+<div align="center">
+
+### 4:3 Content (Classic TV Shows)
+![4:3 Example 1](screenshots/4x3_1.png)
+![4:3 Example 2](screenshots/4x3_2.png)
+
+### 16:9 Content (Movies & Modern TV)
+![16:9 Example](screenshots/16x9.png)
+
+</div>
 
 ## Compatibility
 
