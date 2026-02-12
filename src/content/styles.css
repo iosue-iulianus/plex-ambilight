@@ -1,0 +1,23 @@
+/*
+ * Plex Ambilight - Glow container and edge canvas styles.
+ * The glow effect uses 4 tiny canvases (one per edge) with CSS blur filters,
+ * positioned around the video player container.
+ */
+
+#plex-ambilight-container {
+  position: fixed;
+  pointer-events: none;
+  z-index: 2147483646;
+  overflow: visible;
+  transition: opacity 0.4s ease;
+  /* top, left, width, height set dynamically by renderer.js */
+}
+
+.plex-ambilight-glow {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, filter;
+  image-rendering: auto;
+}
+
+/* Per-side position, size, and filter are set dynamically by renderer.js */

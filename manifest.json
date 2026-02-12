@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "Plex Ambilight",
+  "version": "0.1.0",
+  "description": "Adds ambient lighting effects around the Plex Web video player",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "plex-ambilight@plex-ambilight",
+      "strict_min_version": "121.0"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://app.plex.tv/*"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "src/background/background.js",
+    "scripts": ["src/background/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://app.plex.tv/*"
+      ],
+      "js": [
+        "src/shared/constants.js",
+        "src/shared/storage.js",
+        "src/shared/messaging.js",
+        "src/content/plex-detector.js",
+        "src/content/renderer.js",
+        "src/content/content.js"
+      ],
+      "css": [
+        "src/content/styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
