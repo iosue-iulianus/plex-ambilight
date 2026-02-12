@@ -394,32 +394,54 @@
     // --- Control bar detection & injection ---
 
     /**
-     * Find the "More" (vertical ellipsis) button in the Plex controls.
+     * Find the horizontal row of icon buttons in the Plex controls.
+     * Looks for the More (⋮) button first, then walks to the sibling
+     * container that holds the icon buttons (PiP, shuffle, etc.).
+     * Falls back to heuristic: a child of the right controls that
+     * contains multiple <button> elements in a horizontal layout.
      * @param {HTMLElement} container
      * @returns {HTMLElement|null}
      */
-    function findMoreButton(container) {
+    function findIconRow(container) {
+      // Strategy 1: find the More button, then its sibling that is
+      // the horizontal icon row (contains multiple buttons).
       for (const sel of C.PLEX_MORE_BUTTON_SELECTORS) {
-        const el = container.querySelector(sel) || document.querySelector(sel);
-        if (el) return el;
+        const moreBtn = container.querySelector(sel) || document.querySelector(sel);
+        if (moreBtn && moreBtn.parentElement) {
+          const siblings = moreBtn.parentElement.children;
+          for (let i = 0; i < siblings.length; i++) {
+            const sib = siblings[i];
+            if (sib !== moreBtn && sib.querySelectorAll('button').length >= 2) {
+              return sib;
+            }
+          }
+        }
       }
-      return null;
-    }
 
-    /**
-     * Find the Plex player controls bar within the given container.
-     * @param {HTMLElement} container
-     * @returns {HTMLElement|null}
-     */
-    function findControlsBar(container) {
+      // Strategy 2: find right controls, then the child with multiple buttons
       for (const sel of C.PLEX_CONTROLS_RIGHT_SELECTORS) {
-        const el = container.querySelector(sel) || document.querySelector(sel);
-        if (el) return el;
+        const rightBar = container.querySelector(sel) || document.querySelector(sel);
+        if (rightBar) {
+          // Look for the deepest container that holds multiple buttons
+          var children = rightBar.children;
+          for (var i = 0; i < children.length; i++) {
+            if (children[i].querySelectorAll('button').length >= 2) {
+              return children[i];
+            }
+          }
+          // If the right bar itself has buttons directly, use it
+          if (rightBar.querySelectorAll(':scope > button').length >= 2) {
+            return rightBar;
+          }
+        }
       }
+
+      // Strategy 3: fall back to any controls container
       for (const sel of C.PLEX_CONTROLS_SELECTORS) {
         const el = container.querySelector(sel) || document.querySelector(sel);
         if (el) return el;
       }
+
       return null;
     }
 
@@ -448,31 +470,20 @@
     }
 
     /**
-     * Attempt to place the button into the controls bar.
-     * Strategy: insert right after the "More" (⋮) button so we sit
-     * next to the ellipsis, away from the tiny volume slider.
-     * Falls back to prepending to the right controls bar.
+     * Attempt to place the button into the icon row.
+     * Inserts as the first child so it appears at the leftmost position
+     * in the horizontal button row, to the left of PiP/shuffle/etc.
      */
     function tryInject() {
       if (injected && document.contains(host)) return;
 
-      // Best case: find the ⋮ button and insert right before it
-      const moreBtn = findMoreButton(currentContainer);
-      if (moreBtn) {
-        moreBtn.before(host);
+      const row = findIconRow(currentContainer);
+      if (row) {
+        row.insertBefore(host, row.firstChild);
         injected = true;
-        log('Controls injected before More button');
-        return;
-      }
-
-      // Fallback: find the controls bar and insert at the start
-      const bar = findControlsBar(currentContainer);
-      if (bar) {
-        bar.insertBefore(host, bar.firstChild);
-        injected = true;
-        log('Controls injected into', bar.className);
+        log('Controls injected into icon row', row.className);
       } else {
-        // Controls bar not found yet — retry shortly
+        // Controls not rendered yet — retry shortly
         injected = false;
         setTimeout(function () {
           if (!injected && currentContainer) tryInject();
