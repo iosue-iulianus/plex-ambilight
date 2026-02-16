@@ -8,6 +8,9 @@ Colors are sampled from the edges of the currently playing video and projected a
 
 *Built for self-hosted Plex servers with local media libraries.*
 
+[![Firefox Add-on](https://img.shields.io/badge/Firefox-Install%20Add--on-FF7139?logo=firefox-browser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/plex-ambilight/)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20Me-ff5e5b?logo=ko-fi&logoColor=white)](https://ko-fi.com/iosue_iulianus)
+
 </div>
 
 ## Screenshots
@@ -37,23 +40,17 @@ The glow fills the entire viewport area surrounding the video, automatically ada
 
 ## Installation
 
-> **Note:** This extension is currently awaiting approval on the Chrome Web Store and Firefox Add-ons. Once approved, you'll be able to install it directly from the stores. Until then, use the manual installation methods below.
+### Firefox
+[![Get the add-on for Firefox](https://extensionworkshop.com/assets/img/documentation/publish/get-the-addon-178x60px.dad84b42.png)](https://addons.mozilla.org/en-US/firefox/addon/plex-ambilight/)
 
 ### Chrome (Manual installation)
+> **Note:** This extension is currently awaiting approval on the Chrome Web Store. Until then, use the manual installation method below.
+
 1. Clone or download this repository
 2. Open `chrome://extensions/` in Chrome
 3. Enable **Developer mode** (toggle in the top right)
 4. Click **Load unpacked** and select the `plex-ambilight` directory
 5. Navigate to [app.plex.tv](https://app.plex.tv) and play something
-
-### Firefox (Manual installation)
-1. Clone or download this repository
-2. Open `about:debugging#/runtime/this-firefox` in Firefox
-3. Click **Load Temporary Add-on...**
-4. Select any file in the `plex-ambilight` directory (e.g., `manifest.json`)
-5. Navigate to [app.plex.tv](https://app.plex.tv) and play something
-
-**Note:** Temporary add-ons in Firefox are removed when the browser closes. For persistent installation before store approval, you'll need to sign and install it via AMO self-distribution.
 
 ## Settings
 
@@ -145,6 +142,12 @@ plex-ambilight/
 ## Acknowledgements
 
 The rendering approach (edge color sampling, micro-canvas projection with CSS blur) is adapted from [youtube-ambilight](https://github.com/WesselKroos/youtube-ambilight) by Wessel Kroos. That project implements the same effect for YouTube — this extension re-implements the core technique for Plex Web's completely different DOM structure and SPA lifecycle.
+
+## Support
+
+If you enjoy this extension, consider [buying me a coffee on Ko-fi](https://ko-fi.com/iosue_iulianus)!
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/iosue_iulianus)
 
 ## License
 
