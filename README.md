@@ -25,6 +25,9 @@ Colors are sampled from the edges of the currently playing video and projected a
 ### 16:9 Content (Movies & Modern TV)
 ![16:9 Example](screenshots/16x9.png)
 
+### Video Demo
+[![Watch on YouTube](https://img.shields.io/badge/YouTube-Watch%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=eRl9OI9LFsM)
+
 </div>
 
 ## How it works
