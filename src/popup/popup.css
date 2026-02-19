@@ -170,3 +170,131 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   cursor: pointer;
 }
+
+/* Domains section */
+.domains-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+}
+
+.domains-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.domains-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.domain-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #252528;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.domain-name {
+  color: #d0d0d0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.domain-badge {
+  font-size: 10px;
+  color: #888;
+  background: #333;
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.domain-remove-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.domain-remove-btn:hover {
+  color: #e55;
+  background: rgba(255, 80, 80, 0.1);
+}
+
+.domain-add-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.domain-input {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  background: #252528;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.domain-input:focus {
+  border-color: #e5a00d;
+}
+
+.domain-input::placeholder {
+  color: #555;
+}
+
+.domain-add-btn {
+  width: 30px;
+  height: 30px;
+  background: #e5a00d;
+  border: none;
+  border-radius: 6px;
+  color: #1a1a1e;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.domain-add-btn:hover {
+  background: #f0b020;
+}
+
+.domain-error {
+  font-size: 11px;
+  color: #e55;
+  margin-top: 4px;
+  padding: 0 2px;
+}
+
+.domain-error.hidden {
+  display: none;
+}

@@ -12,6 +12,7 @@
     // Storage keys
     STORAGE_KEY_ENABLED: 'plex_ambilight_enabled',
     STORAGE_KEY_SETTINGS: 'plex_ambilight_settings',
+    STORAGE_KEY_CUSTOM_DOMAINS: 'plex_ambilight_custom_domains',
 
     // Message types
     MSG_TOGGLE: 'toggle_ambilight',
