@@ -6,10 +6,13 @@
   "scripts": {
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
-    "format": "prettier --write \"src/**/*.{js,css,html}\""
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
+    "start:firefox": "web-ext run --source-dir .",
+    "start:chrome": "web-ext run --source-dir . --target chromium"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
-    "prettier": "^3.2.0"
+    "prettier": "^3.2.0",
+    "web-ext": "^9.3.0"
   }
 }

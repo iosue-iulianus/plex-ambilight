@@ -15,10 +15,17 @@
   },
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting"
+  ],
+  "optional_permissions": [
+    "tabs"
   ],
   "host_permissions": [
     "*://app.plex.tv/*"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
   ],
   "background": {
     "service_worker": "src/background/background.js",

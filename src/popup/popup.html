@@ -42,6 +42,22 @@
         <span class="setting-value" id="blur-value">80px</span>
       </div>
     </div>
+
+    <div class="domains-section">
+      <div class="domains-header">
+        <span class="domains-title">Domains</span>
+      </div>
+      <div class="domain-item default-domain">
+        <span class="domain-name">app.plex.tv</span>
+        <span class="domain-badge">default</span>
+      </div>
+      <div id="custom-domains-list"></div>
+      <div class="domain-add-row">
+        <input type="text" id="domain-input" class="domain-input" placeholder="plex.example.com" spellcheck="false">
+        <button id="domain-add-btn" class="domain-add-btn" title="Add domain">+</button>
+      </div>
+      <div id="domain-error" class="domain-error hidden"></div>
+    </div>
   </div>
 
   <script src="popup.js"></script>
